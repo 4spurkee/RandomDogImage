@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Random Cat Image | 4spurkee_</title>
+    <title>Random Dog Image | 4spurkee_</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -23,15 +24,19 @@
         <main>
             <section class="project">
                 <div class="project-title">
-                    <h2>Random Cat Image</h2>
+                    <h2>Random Dog Image</h2>
                 </div>
 
                 <div class="image-container">
-                    <img id="catImage" src="https://cdn2.thecatapi.com/images/8o0.jpg" alt="Random Cat" />
+                    <img
+                        id="dogImage"
+                        src="https://images.dog.ceo/breeds/retriever-golden/n02099601_100.jpg"
+                        alt="Random Dog"
+                    />
                 </div>
 
                 <div class="form-wrapper">
-                    <button onclick="fetchCatImage()">Get New Cat</button>
+                    <button onclick="fetchDogImage()">Get New Dog</button>
                     <button onclick="toggleAutoClicker()">AutoClicker</button>
                 </div>
             </section>
@@ -45,30 +50,39 @@
         </footer>
     </div>
 
-    <audio id="catSound" src="meowrgh.mp3" preload="auto"></audio>
+    <audio id="dogSound" src="meowrgh.mp3" preload="auto"></audio>
 
     <script>
         let autoClickerInterval = null;
 
-        function fetchCatImage() {
-            fetch('https://api.thecatapi.com/v1/images/search')
-                .then(response => response.json())
-                .then(data => {
-                    const catImg = document.getElementById('catImage');
-                    catImg.src = data[0].url;
+        function fetchDogImage() {
+            fetch('https://dog.ceo/api/breeds/image/random')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch dog image');
+                    }
+                    return response.json();
                 })
-                .catch(err => console.error('Error fetching cat image:', err));
+                .then(data => {
+                    if (data.status !== 'success') {
+                        throw new Error('Dog image unavailable');
+                    }
+
+                    const dogImg = document.getElementById('dogImage');
+                    dogImg.src = data.message;
+                })
+                .catch(err => console.error('Error fetching dog image:', err));
         }
 
         window.onload = () => {
-            fetchCatImage();
+            fetchDogImage();
 
-            const catImage = document.getElementById('catImage');
-            const catSound = document.getElementById('catSound');
+            const dogImage = document.getElementById('dogImage');
+            const dogSound = document.getElementById('dogSound');
 
-            catImage.addEventListener('click', () => {
-                catSound.currentTime = 0;
-                catSound.play();
+            dogImage.addEventListener('click', () => {
+                dogSound.currentTime = 0;
+                dogSound.play();
             });
         };
 
@@ -77,9 +91,10 @@
                 clearInterval(autoClickerInterval);
                 autoClickerInterval = null;
             } else {
-                autoClickerInterval = setInterval(fetchCatImage, 2000);
+                autoClickerInterval = setInterval(fetchDogImage, 2000);
             }
         }
     </script>
 </body>
 </html>
+```
